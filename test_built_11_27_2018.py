@@ -1,107 +1,32 @@
-#===========================================================================================
-#===========================================================================================
-#===========================================================================================
-
-#KMEM   NAM MOS GUIDANCE   11/09/2018  0000 UTC                        1
-#DT /NOV   9            /NOV  10                /NOV  11          /    2
-#HR   06 09 12 15 18 21 00 03 06 09 12 15 18 21 00 03 06 09 12 18 00   3
-#X/N                    52          29          41          29    49   4
-#TMP  50 47 44 46 49 50 45 42 38 34 30 29 37 41 35 32 31 31 31 46 45   5
-#DPT  38 37 36 37 35 32 31 32 28 25 21 17 15 15 17 19 20 21 23 25 31   6
-#CLD  OV OV OV OV BK CL CL CL CL CL FW FW CL CL SC SC SC BK OV BK OV   7
-#WDR  36 36 35 35 35 35 34 35 34 36 01 03 03 04 04 09 08 12 12 21 29   8
-#WSP  08 09 08 12 10 10 07 09 08 08 10 10 07 05 05 03 03 03 02 05 03   9
-#P06        80    25     5     3     2     3     4     5     7  7  7  10 
-#P12                    29           4           4           7    11  11
-#Q06         2     0     0     0     0     0     0     0     0  0  0  12
-#Q12                     0           0           0           0     0  13
-#T06      3/ 5  0/ 7  0/ 9  0/ 4  0/ 8  0/ 3  0/ 3  0/ 8  1/ 2  1/ 6  14
-#T12            3/ 7        0/12        0/ 8        0/ 8     4/ 4     15
-#POZ   0  1  1  0  0  0  0  0  0  0  9  7  6  3  7  9  5  4  4  0  0  16 
-#POS   0  0  0  5  0  2 11 31 76 85 77 87 75 88 61 41 15  0  0  3  3  17
-#TYP   R  R  R  R  R  R  R  R  S  S  S  S  S  S  S  S  R  R  R  R  R  18
-#SNW                                 0                       0        19
-#CIG   6  4  4  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  7  20
-#VIS   7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  21
-#OBV   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  22
-
-#===========================================================================================
-#===========================================================================================
-#====================================================================================
-#KSEA   SEATTLE-TACOMA        GFS LAMP GUIDANCE  11/02/2018  0500 UTC               0
-#UTC  06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 00 01 02 03 04 05 06    1
-#TMP  58 58 58 58 58 58 58 57 57 57 57 57 58 58 58 59 59 58 57 56 55 54 54 54 54    2
-#DPT  53 53 53 52 52 52 52 51 51 50 50 50 50 49 49 48 48 47 47 47 47 47 47 47 48    3 
-#WDR  18 19 19 20 20 20 21 21 22 23 23 24 23 23 23 22 22 22 21 22 23 23 21 19 17    4 
-#WSP  18 18 18 19 18 18 18 19 22 23 23 21 21 21 19 18 19 18 16 14 13 11 09 08 07    5
-#WGS  27 27 27 28 27 26 26 27 30 30 31 28 29 29 26 25 26 25 24 21 20 18 NG NG NG    6
-#PPO  35 41 49 56 52 50 52 46 42 35 30 25 18 19 19 19 18 18 16 12 11  9  7  6  5    7
-#PCO   N  Y  Y  Y  Y  Y  Y  Y  Y  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N    8
-#P06                    88                66                52                22    9
-#LP1   0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0   10
-#LC1   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N   11
-#CP1   1  4  9 14 20 14 18 19 21 19 16 12  8  8  9 11 12 10  8  7  6  6  5  4  2   12
-#CC1   N  N  N  L  M  L  L  M  M  M  L  L  N  N  N  N  L  N  N  N  N  N  N  N  N   13
-#POZ   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0   14
-#POS   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0   15
-#TYP   R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R   16
-#CLD  OV OV OV OV OV OV OV OV BK BK BK BK BK BK BK BK BK BK BK OV OV OV OV OV OV   17
-#CIG   5  5  5  5  4  4  4  4  5  5  5  5  6  6  6  6  6  6  6  6  6  6  6  6  6   18
-#CCG   5  5  5  5  5  4  4  4  5  5  5  5  5  5  5  5  6  6  6  6  6  6  6  6  5   19
-#VIS   6  7  7  5  5  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7   20
-#CVS   5  5  5  5  5  5  5  5  6  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7   21
-#OBV   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N   22
-#====================================================================================
- #PANC   ANCHORAGE             GFS LAMP GUIDANCE  11/03/2018  0200 UTC              0 
- #UTC  03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 00 01 02 03   1
- #TMP  29 28 27 27 26 26 26 26 26 26 25 25 25 25 25 26 28 30 31 32 33 34 34 33 31   2 
- #DPT  15 16 16 15 15 15 16 15 15 15 14 14 15 15 16 17 18 19 19 20 20 20 20 19 19   3
- #WDR  36 36 36 36 36 36 36 36 36 36 36 01 01 01 01 01 01 01 01 02 02 02 03 03 04   4
- #WSP  05 05 05 05 05 05 05 06 06 06 07 07 06 06 06 05 05 06 06 06 05 05 05 04 04   5
- #WGS  NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG NG   6
- #PPO   0  0  0  0  0  0  0  0  0  1  2  3  3  4  4  5  5  5  5  4  3  3  2  1  1   7
- #PCO   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N   8
- #P06                              0                 4                 2            9
- #POZ   2  3  5  5  4  2  4  1  3  2  1  1  2  5  5  4  6  6  6  4  4  2  4  4  5  10
- #POS  98 97 93 92 90 90 83 87 85 85 87 90 89 83 86 86 85 85 79 72 67 65 64 66 68  11
- #TYP   S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  S  12
- #CLD  BK BK BK BK BK BK BK BK BK OV OV OV OV OV OV BK BK BK BK BK BK BK BK BK BK  13
- #CIG   8  8  8  8  8  8  7  7  7  7  7  7  6  6  6  7  7  7  7  7  7  7  7  7  7  14
- #CCG   7  6  6  6  6  6  6  6  6  6  6  6  5  6  6  6  6  5  6  5  5  6  6  6  6  15
- #VIS   7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  16
- #CVS   7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  6  17
- #OBV   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  18
-#====================================================================================
-
-#UTC Hour of the day in UTC time. This is the hour at which the forecast is valid, or if the forecast is valid for a period, the end of the forecast period.
-#TMP surface temperature valid at that hour.
-#DPT surface dewpoint valid at that hour.
-#WDR forecasts of the 10-meter wind direction at the hour, given in tens of degrees.
-#WSP forecasts of the 10-meter wind speed at the hour, given in knots.
-#WGS forecasts of the 10-meter wind gust at the hour, given in knots.  "NG" means that no gust is forecast.
-#PPO probability of precipitation occurring on the hour.  The precipitation need not be measurable.
-#P06 probability of measurable precipitation (PoP) during a 6-h period ending at that time.
-#PCO categorical forecast of yes (Y) or no (N) indicating if precipitation, not necessarily measurable, will occur on the hour.
-#LP1 probability of lightning (at least one total lightning flash) occurring during the 1-hr period ending at the indicated time.
-#LC1 categorical forecast of no (N), low (L), medium (M), or high (H) potential for lightning (at least one total lightning flash) occurring during the 1-hr period ending at the indicated time.
-#CP1 probability of convection (at least one total lightning flash and/or radar reflectivity of 40dBZ or higher) occurring during the 1-hr period ending at the indicated time.
-#CC1 categorical forecast of no (N), low (L), medium (M), or high (H) potential for convection (at least one total lightning flash and/or radar reflectivity of 40dBZ or higher) occurring during the 1-hr period ending at the indicated time.
-#POZ* conditional probability of freezing pcp occurring at the hour.  This probability is conditional on precipitation occurring.
-#POS* conditional probability of snow occurring at the hour.  This probability is conditional on precipitation occurring.
-#TYP* conditional precipitation type at the hour.  This category forecast is conditional on precipitation occurring.
-#CLD forecast categories of total sky cover valid at that hour.
-#CIG ceiling height categorical forecasts at the hour.
-#CCG conditional ceiling height categorical forecasts at the hour.   This category forecast is conditional on precipitation occurring.
-#VIS visibility categorical forecasts at the hour.
-#CVS conditional visibility categorical forecasts at the hour.   This category forecast is conditional on precipitation occurring.
-#OBV obstruction to vision categorical forecasts at the hour.
-#====================================================================================
-
 #import libraries
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import datetime
 
+class MOS2TAF(object) 
+""" MOS to TAF converter """
+
+    def __init__(self,string) 
+
+    """
+    Initializes the object with GFS MOS LAMP, NAM MOS, and  report text.
+ 
+        
+    Args:
+        string: station ID e.g. KMEM (Special Note: Work for US station only)
+        
+    Raises:
+        MalformedTAF: An error parsing the TAF/METAR report
+    """
+
+       # Instance variables
+        self._raw_taf = None
+        self._taf_header = None
+        self._raw_weather_groups = []
+        self._weather_groups = []
+        self._maintenance = None
+  
+ 
 station_id = "KIND" 
 short_station_id = station_id[1:4]
 
@@ -110,7 +35,7 @@ quote_page1 = "http://www.nws.noaa.gov/cgi-bin/mos/getmet.pl?sta="+station_id
 quote_page2 = "http://www.nws.noaa.gov/cgi-bin/mos/getmav.pl?sta="+station_id
 quote_page3 = "https://www.aviationweather.gov/metar/data?ids="+station_id+"&format=raw&date=&hours=3"
 quote_page4 = "https://forecast.weather.gov/product.php?site=meg&product=TAF&issuedby="+short_station_id
-quote_page5 = "https://www.wrh.noaa.gov/mesowest/timeseries.php?wfo=wrh&num=24&banner=NONE&hfmetars=1&sid=KMEM"
+
 
 html = urlopen(quote_page3)
 soup = BeautifulSoup(html,"html.parser")
