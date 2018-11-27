@@ -29,7 +29,7 @@ For example:
  OBV   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N 
                                                                                  
 
-CCCC TTTT/TTTT HHHHZ WWWDDKT 
+CCCC TTTT/TTTT HHHHZ WWWDDKT F
 
 KIND FT GFS LAMP 2707/2808 0723Z 270/13KT OVC 1000-1900 P6SM M4/M7 PRECIP: 36%  SN:  95%  IC:   5%  LGT:  6 %
 FM0800 270/13KT OVC 1000-1900 P6SM M4/M7 PRECIP: 25%  SN:  95%  IC:   6%  LGT:  7 %
