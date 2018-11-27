@@ -4,6 +4,7 @@ This module is supposed to make it easy for Operational Meteorologists to output
 
 For example: 
 
+
  KIND   INDIANAPOLIS          GFS LAMP GUIDANCE  11/27/2018  0600 UTC            
  UTC  07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 00 01 02 03 04 05 06 07 
  TMP  25 24 24 23 23 23 21 21 22 22 22 22 22 22 22 22 21 21 21 21 21 20 20 20 19 
