@@ -4,6 +4,17 @@ from bs4 import BeautifulSoup
 import datetime 
 import re
 
+# Defining Object 
+class MOS2TAF(object):
+"""
+Initializes the object with the ICAO 
+
+Args:
+    string: ICAO (US Station Only excluding Alaska, Hawaii and US terrorities)
+
+Returns:
+""" 
+
 # Define a function
 
 station_id = "KDTW" 
@@ -47,13 +58,24 @@ lines=text.splitlines()
 #print(lines)
 
 #station info
-def station_info(self,string): 
+def station_info_fuction(self,string): 
+"""
+Extracts Station Info
+
+Returns: Station Info, Station Name, and Initalized Time
+""" 
+
  station_info = lines[1].split()
  station_name = 'STATION NAME: '+station_info[0]
  initalized_time = 'INITIALIZED TIME: ' + station_info[6] +'Z'
  return(station_info,station_name,initalized_time)
 
 def time_vector(self,string): 
+"""
+Extracts Time From the GFS LAMP MOS data 
+
+Returns: FMXXXXZ (i.e. fm_times) and a time vecotr 
+""" 
  time_vector = lines[2].split()
  time_vector = (time_vector[1:len(time_vector)])
  time = [ s + '00' for s in time_vector]
