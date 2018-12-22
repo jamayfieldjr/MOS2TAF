@@ -5,7 +5,7 @@ import datetime
 import re
 
 # Defining Object 
-class MOS2TAF(object):
+class GFSLAMPMOS2TAF(object):
 """
 Initializes the object with the ICAO 
 
@@ -46,8 +46,6 @@ for values in cleantext:
   print(values);
 
 print(' ')
-#====================================================================================
-#====================================================================================
 
 html = urlopen(quote_page)
 #print(html.read())
