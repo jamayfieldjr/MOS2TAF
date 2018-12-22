@@ -4,296 +4,279 @@ from bs4 import BeautifulSoup
 import datetime 
 import re
 
-# Defining Object 
+# Defining GFSLAMPMOS2TAF Object 
 class GFSLAMPMOS2TAF(object):
-"""
-Initializes the object with the ICAO 
+   """ GFS LMAP MOS 2 TAF FORMAT parser """
+    def __init__(self,string):
+    """
+    Initializes the object with the ICAO 
+    Args:
+        string: ICAO (US Station Only excluding Alaska, Hawaii and US terrorities)
+    Returns:
+    """ 
+        # Instance variables
+        self._raw_taf = None
+        self._taf_header = None
+        self._raw_weather_groups = []
+        self._weather_groups = []
+        self._maintenance = None
 
-Args:
-    string: ICAO (US Station Only excluding Alaska, Hawaii and US terrorities)
+        if isinstance(string, str) and string != "":
+            self._raw_taf = string
+        else:
+            raise MalformedTAF("ICAO string expected")
 
-Returns:
-""" 
+        # Patterns use ^ and $, so we don't want
+        # leading/trailing spaces
+        self._raw_taf = self._raw_taf.strip()
 
-# Define a function
+        # Initialize header part
+        self._taf_header = self._init_header(self._raw_taf)
 
-station_id = "KDTW" 
-short_station_id = station_id[1:4]
+        self._maintenance = self._parse_maintenance(self._raw_taf)
 
-quote_page = "http://www.nws.noaa.gov/cgi-bin/lamp/getlav.pl?sta="+station_id
-quote_page1 = "http://www.nws.noaa.gov/cgi-bin/mos/getmet.pl?sta="+station_id
-quote_page2 = "http://www.nws.noaa.gov/cgi-bin/mos/getmav.pl?sta="+station_id
-quote_page3 = "https://www.aviationweather.gov/metar/data?ids="+station_id+"&format=raw&date=&hours=3"
-quote_page4 = "https://forecast.weather.gov/product.php?site=meg&product=TAF&issuedby="+short_station_id
-quote_page5 = "https://www.wrh.noaa.gov/mesowest/timeseries.php?wfo=wrh&num=24&banner=NONE&hfmetars=1&sid=KMEM"
+     # Defining a header
+     def _init_header(self, string):
+     """
+     Extracts intial data
 
-html = urlopen(quote_page3)
-soup = BeautifulSoup(html,"html.parser")
-#features = "html.parser"
-text = str(soup.find_all('code'))
+     Returns: 
+     """ 
+      station_id = string 
+      short_station_id = station_id[1:4]
+      quote_page = "http://www.nws.noaa.gov/cgi-bin/lamp/getlav.pl?sta="+station_id
+      quote_page1 = "http://www.nws.noaa.gov/cgi-bin/mos/getmet.pl?sta="+station_id
+      quote_page2 = "http://www.nws.noaa.gov/cgi-bin/mos/getmav.pl?sta="+station_id
+      quote_page3 = "https://www.aviationweather.gov/metar/data?ids="+station_id+"&format=raw&date=&hours=3"
+      quote_page4 = "https://forecast.weather.gov/product.php?site=meg&product=TAF&issuedby="+short_station_id
+      quote_page5 = "https://www.wrh.noaa.gov/mesowest/timeseries.php?wfo=wrh&num=24&banner=NONE&hfmetars=1&sid=KMEM"
+      html = urlopen(quote_page3)
+      soup = BeautifulSoup(html,"html.parser")
+      text = str(soup.find_all('code'))
 
-def remove_html_tags(text):
-    """Remove html tags from a string"""
-    import re
-    clean = re.compile('<.*?>')
-    return re.sub(clean, '', text)
+       def remove_html_tags(text):
+       """Remove html tags from a string"""
+       clean = re.compile('<.*?>')
+       return re.sub(clean, '', text)
 
-#print(remove_html_tags(text))
-cleantext=remove_html_tags(text) 
-cleantext=re.split(",",cleantext)
+      cleantext=remove_html_tags(text) 
+      cleantext=re.split(",",cleantext)
 
-for values in cleantext:
-  print(values);
+      for values in cleantext:
+       print(values);
 
-print(' ')
+      html = urlopen(quote_page)
+      soup = BeautifulSoup(html,"html.parser")
+      text = str(soup.find_all('pre'))
+      lines=text.splitlines()
 
-html = urlopen(quote_page)
-#print(html.read())
 
-soup = BeautifulSoup(html,"html.parser")
-text = str(soup.find_all('pre'))
-lines=text.splitlines()
-#print(lines)
+     def station_info_fuction(self,string): 
+     """
+     Extracts Station Info
+     Returns: Station Info, Station Name, and Initalized Time
+     """ 
+      station_info = lines[1].split()
+      station_name = 'STATION NAME: '+station_info[0]
+      initalized_time = 'INITIALIZED TIME: ' + station_info[6] +'Z'
+      return(station_info,station_name,initalized_time)
+    
+     def time_vector_function(self,string): 
+     """
+     Extracts Time From the GFS LAMP MOS data 
+     Returns: FMXXXXZ (i.e. fm_times) and a time vecotr 
+     """ 
+      time_vector = lines[2].split()
+      time_vector = (time_vector[1:len(time_vector)])
+      time = [ s + '00' for s in time_vector]
+      fm_times=["FM" + s for s in time]
+      return(fm_times,time)
+    def temp_function(self,string): 
+     """
+     Extracts Temperature From the GFS LAMP MOS data 
+     Returns: Temperature M02 or 02 
+     """ 
+      temp = lines[3].split()
+      temp = temp[1:len(temp)]
+      temp_new = [int(x) for x in temp]
+      temp_c = [(round(((y - 32) * 5.0 / 9.0))) for y in temp_new]
+      temp_c=map(str,temp_c)
+      final_temp_c=[x.replace('-', 'M') for x in temp_c]
+      return(final_temp_c,)
 
-#station info
-def station_info_fuction(self,string): 
-"""
-Extracts Station Info
+     def dewpointtemp_function(self,string): 
+     """
+     Extracts Dewpoint Temperature from the GFS LAMP MOS data 
+     Returns: Dew Point Temperature M02 or 02 
+     """ 
+      dew_point = lines[4].split()
+      dew_point = dew_point[1:len(dew_point)]
+      dew_point_new = [int(x) for x in dew_point]
+      dew_point_c = [(round(((y - 32) * 5.0 / 9.0))) for y in dew_point_new]
+      dew_point_c=map(str,dew_point_c)
+      final_dew_point_c=[x.replace('-', 'M') for x in dew_point_c]
+      return(final_dew_point_c)
 
-Returns: Station Info, Station Name, and Initalized Time
-""" 
+     def full_temp_function(self,string):
+     """
+     Extracts Full Temperature from the GFS LAMP MOS data 
+     Returns: Full Temperature XX/XX 
+     """ 
+      [final_temp_c,'/',final_dew_point_c]
+      full_temp=['/'.join(map(str, i)) for i in zip(final_temp_c, final_dew_point_c)]
+      return(full_temp)
 
- station_info = lines[1].split()
- station_name = 'STATION NAME: '+station_info[0]
- initalized_time = 'INITIALIZED TIME: ' + station_info[6] +'Z'
- return(station_info,station_name,initalized_time)
+     def wind_dir_function(self,string): 
+     """
+     Extracts Wind Direction from the GFS LAMP MOS data 
+     Returns: Wind Direction DIR
+     """ 
+      wind_dir = lines[5].split()
+      wind_dir = wind_dir[1:len(wind_dir)]
+      wind_dir=list(map(lambda k: k+'0', wind_dir))
+      return(wind_dir)
 
-def time_vector_function(self,string): 
-"""
-Extracts Time From the GFS LAMP MOS data 
+     def wind_spd_fucntion(self,string):
+     """
+     Extracts Wind Direction from the GFS LAMP MOS data 
+     Returns: Wind Speed XXGXXKT
+     """ 
+      wind_spd = lines[6].split()
+      wind_spd = wind_spd[1:len(wind_spd)]
+      wind_spd=list(map(lambda k: k+'KT', wind_spd))
+      return(wind_spd)
 
-Returns: FMXXXXZ (i.e. fm_times) and a time vecotr 
-""" 
- time_vector = lines[2].split()
- time_vector = (time_vector[1:len(time_vector)])
- time = [ s + '00' for s in time_vector]
- fm_times=["FM" + s for s in time]
- return(fm_times,time)
+     def full_wind_fuction(self,string):
+     """
+     Extracts Wind Direction from the GFS LAMP MOS data 
+     Returns: Full Wind DIRXXGXXKT
+     """ 
+      wind=[''.join(map(str, i)) for i in zip(wind_dir, wind_spd)]
+      full_wind=['/'.join(map(str, i)) for i in zip(wind_dir, wind_spd)]
+      return(full_wind)
 
-def temp_function(self,string): 
-"""
-Extracts Temperature From the GFS LAMP MOS data 
+     def precip_prob(self,string):
+     """
+     Extracts Precipitation Probability from the GFS LAMP MOS data 
+     Returns: Precipitation Probability XX%
+     """ 
+      precip_prob=lines[8]
+      precip_prob = precip_prob [5:len(precip_prob )]
 
-Returns: M02 or 02 
-""" 
- temp = lines[3].split()
- temp = temp[1:len(temp)]
- temp_new = [int(x) for x in temp]
- temp_c = [(round(((y - 32) * 5.0 / 9.0))) for y in temp_new]
- temp_c=map(str,temp_c)
- final_temp_c=[x.replace('-', 'M') for x in temp_c]
- return(final_temp_c,)
-
-def dewpointtemp_function(self,string): 
-"""
-Extracts Dewpoint Temperature from the GFS LAMP MOS data 
-
-Returns: M02/02
-""" 
- dew_point = lines[4].split()
- dew_point = dew_point[1:len(dew_point)]
- dew_point_new = [int(x) for x in dew_point]
- dew_point_c = [(round(((y - 32) * 5.0 / 9.0))) for y in dew_point_new]
- dew_point_c=map(str,dew_point_c)
- final_dew_point_c=[x.replace('-', 'M') for x in dew_point_c]
- return(final_dew_point_c)
-
-def full_temp_function(self,string):
-"""
-Extracts Full Temperature from the GFS LAMP MOS data 
-
-Returns: Full Temperature XX/XX 
-""" 
- [final_temp_c,'/',final_dew_point_c]
- full_temp=['/'.join(map(str, i)) for i in zip(final_temp_c, final_dew_point_c)]
- return(full_temp)
-
-def wind_dir_function(self,string):
-"""
-Extracts Wind Direction from the GFS LAMP MOS data 
-
-Returns: Wind Direction DIR
-""" 
- wind_dir = lines[5].split()
- wind_dir = wind_dir[1:len(wind_dir)]
- wind_dir=list(map(lambda k: k+'0', wind_dir))
- return(wind_dir)
-
-def wind_spd_fucntion(self,string):
-"""
-Extracts Wind Direction from the GFS LAMP MOS data 
-
-Returns: Wind Speed XXGXXKT
-""" 
- wind_spd = lines[6].split()
- wind_spd = wind_spd[1:len(wind_spd)]
- wind_spd=list(map(lambda k: k+'KT', wind_spd))
- return(wind_spd)
-
-def full_wind_fuction(self,string):
-"""
-Extracts Wind Direction from the GFS LAMP MOS data 
-
-Returns: Full Wind DIRXXGXXKT
-""" 
- wind=[''.join(map(str, i)) for i in zip(wind_dir, wind_spd)]
- full_wind=['/'.join(map(str, i)) for i in zip(wind_dir, wind_spd)]
- return(full_wind)
-
-def precip_prob(self,string):
-"""
-Extracts Precipitation Probability from the GFS LAMP MOS data 
-
-Returns: Precipitation Probability XX%
-""" 
- precip_prob=lines[8]
- precip_prob = precip_prob [5:len(precip_prob )]
-
- def split(s, n):
-     if len(s) < n:
+       def split(s, n):
+        if len(s) < n:
          return []
-     else:
+        else:
          return [s[:n]] + split(s[n:], n) 
 
- precip_prob  =  split(precip_prob ,3)
- pcp = ['PRECIP:']*len(precip_prob)
- precentage = ['% ']*len(precip_prob)
- zipped_precip_prob = [''.join(map(str, i)) for i in zip(pcp, precip_prob, precentage)]
+      precip_prob  =  split(precip_prob ,3)
+      pcp = ['PRECIP:']*len(precip_prob)
+      precentage = ['% ']*len(precip_prob)
+      zipped_precip_prob = [''.join(map(str, i)) for i in zip(pcp, precip_prob, precentage)]
  
- def snow_prob_function(self,string):
- """
- Extracts Snow Probability from the GFS LAMP MOS data 
+     def snow_prob_function(self,string):
+     """
+     Extracts Snow Probability from the GFS LAMP MOS data 
+     Returns: Snow Probability XX%
+     """ 
+      lol = lines[16]
+      lol = lol[5:len(lol)]
+      snow_prob  =  split(lol, 3)
+      pcp = ['SN: ']*len(snow_prob)
+      precentage = ['% ']*len(snow_prob)
+      zipped_snow_prob =[''.join(map(str, i)) for i in zip(pcp, snow_prob, precentage)]
 
- Returns: Snow Probability XX%
- """ 
-  lol = lines[16]
-  lol = lol[5:len(lol)]
-  snow_prob  =  split(lol, 3)
-  pcp = ['SN: ']*len(snow_prob)
-  precentage = ['% ']*len(snow_prob)
-  zipped_snow_prob =[''.join(map(str, i)) for i in zip(pcp, snow_prob, precentage)]
-
- def ice_prob_function(self,string):
- """
- Extracts Snow Probability from the GFS LAMP MOS data 
-
- Returns: Snow Probability XX%
- """ 
-  lol= lines[15]
-  lol = lol[5:len(lol)]
-  ice_prob  =  split(lol, 3)
-  pcp = ['IC: ']*len(ice_prob)
-  precentage = ['% ']*len(ice_prob)
-  zipped_ice_prob =[''.join(map(str, i)) for i in zip(pcp, ice_prob, precentage)]
-
-# def lgt_prob_function(self,string):
-# """
-# Extracts Snow Probability from the GFS LAMP MOS data 
-#
-# Returns: Snow Probability XX%
-# """ 
-#  lgt_prob = lines[11]
-#  lol = lol[4:len(lol)]
-#  lgt_prob  =  split(lol, 3)
-#  pcp = ['LGT: ']*len(lgt_prob)
-#  precentage = ['% ']*len(lgt_prob)
-#  zipped_lgt_prob =[''.join(map(str, i)) for i in zip(pcp, lgt_prob, precentage)]
-
- return(zipped_precip_prob,zipped_snow_prob,zipped_ice_prob)
+     def ice_prob_function(self,string):
+     """
+     Extracts Snow Probability from the GFS LAMP MOS data 
+     Returns: Snow Probability XX%
+     """ 
+      lol= lines[15]
+      lol = lol[5:len(lol)]
+      ice_prob  =  split(lol, 3)
+      pcp = ['IC: ']*len(ice_prob)
+      precentage = ['% ']*len(ice_prob)
+      zipped_ice_prob =[''.join(map(str, i)) for i in zip(pcp, ice_prob, precentage)]
+      return(zipped_precip_prob,zipped_snow_prob,zipped_ice_prob)
   
-def cloud_type_function(self,string):
- """
- Extracts Cloud Type from the GFS LAMP MOS data 
+     def cloud_type_function(self,string):
+     """
+     Extracts Cloud Type from the GFS LAMP MOS data 
+     Returns: Cloud Type SKC,FEW,SCT,BKN,OVC
+     """ 
+     cloud_type = lines[18].split()
+     cloud_type = cloud_type[1:len(cloud_type)]
+    return(cloud_type)
 
- Returns: Cloud Type SKC,FEW,SCT,BKN,OVC
- """ 
- cloud_type = lines[18].split()
- cloud_type = cloud_type[1:len(cloud_type)]
- return(cloud_type)
+     def cloud_height_function(self,string):
+     """
+     Extracts Cloud Height from the GFS LAMP MOS data 
+     Returns: Cloud Height XXX
+     """ 
+      cloud_height = lines[19].split()
+      cloud_height = cloud_height[1:len(cloud_height)]
+      return(cloud_height)
 
-def cloud_height_function(self,string):
- """
- Extracts Cloud Height from the GFS LAMP MOS data 
+     def full_cloud_function(self,string):
+     """
+     Extracts Full Cloud from the GFS LAMP MOS data 
+     Returns: Full Cloud XXX
+     """ 
+      zipped_height_types=[''.join(map(str, i)) for i in zip(cloud_type, cloud_height)]
+      cloud_type_hash={ 'CL':'SKC', 'FW':'FEW', 'SC':'SCT', 'BK':'BKN', 'OV':'OVC' }
+      cloud_height_hash={ '1': ' 200', '2' : ' 200-400', '3' : ' 500-900', '4' : ' 1000-1900', '5' : ' 2000-3000','6' : ' 3100-6500', '7' : ' 6600-12000', '8' : ' 12000' }
+      results = []
+       for ht in zipped_height_types:
+        htype = ht[:2]
+        val = ht[2:]
+        res = cloud_type_hash[htype] + cloud_height_hash[val]
+       results.append(res)
+      return(results)
 
- Returns: Cloud Height XXX
- """ 
- cloud_height = lines[19].split()
- cloud_height = cloud_height[1:len(cloud_height)]
- return(cloud_height)
+     def full_vis_function(self,string):
+     """
+     Extracts Full Cloud from the GFS LAMP MOS data 
+     Returns: Visibility i.e. P6SM, 5SM-3SM BR, 3SM-1SM BR
+     """ 
+      vis = lines[21].split()
+      vis = vis[1:len(vis)]
+      visibility_hash={ '1':'M1/2SM FG', '2':'1/2SM-1SM FG/BR', '3':'1SM-2SM BR', '4':'2SM-3SM BR', '5':'3SM-5SM BR', '6':'6SM BR', '7':'P6SM'}
+      visresults = []
+       for v in vis:
+        val = v[:2]
+        res = visibility_hash[val] 
+        visresults.append(res)
+      return(visresults)
 
-def full_cloud_function(self,string):
- """
- Extracts Full Cloud from the GFS LAMP MOS data 
+     def final_taf_format(self,string):
+     """
+     Extracts Final TAF Format from the GFS LAMP MOS data 
+     Returns: TAF FORMAT 24 hours 
+     """ 
+     x = zip(fm_times, full_wind, results, visresults, full_temp, zipped_precip_prob, zipped_snow_prob, zipped_ice_prob, zipped_lgt_prob)
+     new_data = list(' '.join(w) for w in x)
+     onepiece = station_info[0]
+     twopiece = ' FT GFS LAMP '
+     elevenpiece =  datetime.datetime.today().strftime('%H%M')
+     elevenpiece = [elevenpiece,'Z']
+     elevenpiece = ''.join(elevenpiece)
+     threepiece =  datetime.datetime.today().strftime('%d')
+     fourpiece = time[0][:2]
+     fivepiece = [threepiece,fourpiece]
+     fivepiece=''.join(fivepiece)
+     sixpiece = str(datetime.date.today() + datetime.timedelta(days=1))
+     sevenpiece = sixpiece[-2:] 
+     eightpiece = int(time[len(time)-1][:2])+1
+     eightpiece = ''.join(['0',str(eightpiece)])
+     ninepiece = [sevenpiece,eightpiece]
+     ninepiece =''.join(ninepiece)
+     tenpiece = [fivepiece,ninepiece]
+     tenpiece ='/'.join(tenpiece)
+     tenpiece = [onepiece,twopiece,tenpiece,' ',elevenpiece,new_data[0][6:]]
+     tenpiece =''.join(tenpiece)
+     print(tenpiece)
+     new_data = new_data[1:len(new_data)] 
+     return(new_data)
 
- Returns: Full Cloud XXX
- """ 
- zipped_height_types=[''.join(map(str, i)) for i in zip(cloud_type, cloud_height)]
- cloud_type_hash={ 'CL':'SKC', 'FW':'FEW', 'SC':'SCT', 'BK':'BKN', 'OV':'OVC' }
- cloud_height_hash={ '1': ' 200', '2' : ' 200-400', '3' : ' 500-900', '4' : ' 1000-1900', '5' : ' 2000-3000','6' : ' 3100-6500', '7' : ' 6600-12000', '8' : ' 12000' }
- results = []
- for ht in zipped_height_types:
-  htype = ht[:2]
-  val = ht[2:]
-  res = cloud_type_hash[htype] + cloud_height_hash[val]
-  results.append(res)
- return(results)
-
-def full_vis_function(self,string):
- """
- Extracts Full Cloud from the GFS LAMP MOS data 
-
- Returns: Visibility i.e. P6SM, 5SM-3SM BR, 3SM-1SM BR
- """ 
-  vis = lines[21].split()
-  vis = vis[1:len(vis)]
-  visibility_hash={ '1':'M1/2SM FG', '2':'1/2SM-1SM FG/BR', '3':'1SM-2SM BR', '4':'2SM-3SM BR', '5':'3SM-5SM BR', '6':'6SM BR', '7':'P6SM'}
-  visresults = []
-  for v in vis:
-   val = v[:2]
-   res = visibility_hash[val] 
-   visresults.append(res)
-  return(visresults)
-
-def final_taf_format(self,string):
- """
- Extracts Final TAF Format from the GFS LAMP MOS data 
-
- Returns: TAF FORMAT 24 hours 
- """ 
-  x = zip(fm_times, full_wind, results, visresults, full_temp, zipped_precip_prob, zipped_snow_prob, zipped_ice_prob, zipped_lgt_prob)
-  new_data = list(' '.join(w) for w in x)
-  onepiece = station_info[0]
-  twopiece = ' FT GFS LAMP '
-  elevenpiece =  datetime.datetime.today().strftime('%H%M')
-  elevenpiece = [elevenpiece,'Z']
-  elevenpiece = ''.join(elevenpiece)
-  threepiece =  datetime.datetime.today().strftime('%d')
-  fourpiece = time[0][:2]
-  fivepiece = [threepiece,fourpiece]
-  fivepiece=''.join(fivepiece)
-  sixpiece = str(datetime.date.today() + datetime.timedelta(days=1))
-  sevenpiece = sixpiece[-2:] 
-  eightpiece = int(time[len(time)-1][:2])+1
-  eightpiece = ''.join(['0',str(eightpiece)])
-  ninepiece = [sevenpiece,eightpiece]
-  ninepiece =''.join(ninepiece)
-  tenpiece = [fivepiece,ninepiece]
-  tenpiece ='/'.join(tenpiece)
-  tenpiece = [onepiece,twopiece,tenpiece,' ',elevenpiece,new_data[0][6:]]
-  tenpiece =''.join(tenpiece)
-  print(tenpiece)
-  new_data = new_data[1:len(new_data)] 
-  return(new_data)
-
-for values in new_data:
-   print(values)
+     for values in new_data:
+      print(values)
