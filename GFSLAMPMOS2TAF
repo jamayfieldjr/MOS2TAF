@@ -277,8 +277,25 @@ class GFSLAMPMOS2TAF(object):
      tenpiece = [onepiece,twopiece,tenpiece,' ',elevenpiece,new_data[0][6:]]
      tenpiece =''.join(tenpiece)
      print(tenpiece)
-     new_data = new_data[1:len(new_data)] 
-     return(new_data)
+     print(' ')
+     print('CURRENT PAST TWO HOUR ROUTINE AND SPECI METAR(s)')
+     print(' ')
 
-     for values in new_data:
-      print(values)
+    cleantext=reversed(cleantext)
+     for values_00 in cleantext:
+      values_00 = values_00[8:]
+      values_00 = values_00.replace(station_id, "")
+      values_00 = values_00.replace("Z", "")
+      values_00= re.split("[A-Za-z][0-9]{4}",values_00)
+      print(values_00[0])
+
+     print(' ')
+     print('GFS LAMP TERMINAL AERODROME FORECAST ')
+     print(' ')
+
+    new_data = new_data[0:len(new_data)] 
+
+    for values in new_data:
+     print(values);
+
+
