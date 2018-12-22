@@ -70,7 +70,7 @@ Returns: Station Info, Station Name, and Initalized Time
  initalized_time = 'INITIALIZED TIME: ' + station_info[6] +'Z'
  return(station_info,station_name,initalized_time)
 
-def time_vector(self,string): 
+def time_vector_function(self,string): 
 """
 Extracts Time From the GFS LAMP MOS data 
 
@@ -82,7 +82,12 @@ Returns: FMXXXXZ (i.e. fm_times) and a time vecotr
  fm_times=["FM" + s for s in time]
  return(fm_times,time)
 
-def temp(self,string): 
+def temp_function(self,string): 
+"""
+Extracts Temperature From the GFS LAMP MOS data 
+
+Returns: M02 or 02 
+""" 
  temp = lines[3].split()
  temp = temp[1:len(temp)]
  temp_new = [int(x) for x in temp]
@@ -91,7 +96,12 @@ def temp(self,string):
  final_temp_c=[x.replace('-', 'M') for x in temp_c]
  return(final_temp_c,)
 
-def dewpointtemp(self,string): 
+def dewpointtemp_function(self,string): 
+"""
+Extracts Dewpoint Temperature from the GFS LAMP MOS data 
+
+Returns: M02/02
+""" 
  dew_point = lines[4].split()
  dew_point = dew_point[1:len(dew_point)]
  dew_point_new = [int(x) for x in dew_point]
@@ -100,24 +110,44 @@ def dewpointtemp(self,string):
  final_dew_point_c=[x.replace('-', 'M') for x in dew_point_c]
  return(final_dew_point_c)
 
-def full_temp(self,string):
+def full_temp_function(self,string):
+"""
+Extracts Full Temperature from the GFS LAMP MOS data 
+
+Returns: Full Temperature XX/XX 
+""" 
  [final_temp_c,'/',final_dew_point_c]
  full_temp=['/'.join(map(str, i)) for i in zip(final_temp_c, final_dew_point_c)]
  return(full_temp)
 
-def wind_dir(self,string):
+def wind_dir_function(self,string):
+"""
+Extracts Wind Direction from the GFS LAMP MOS data 
+
+Returns: Wind Direction DIR
+""" 
  wind_dir = lines[5].split()
  wind_dir = wind_dir[1:len(wind_dir)]
  wind_dir=list(map(lambda k: k+'0', wind_dir))
  return(wind_dir)
 
-def wind_spd(self,string):
+def wind_spd_fucntion(self,string):
+"""
+Extracts Wind Direction from the GFS LAMP MOS data 
+
+Returns: Wind Speed XXGXXKT
+""" 
  wind_spd = lines[6].split()
  wind_spd = wind_spd[1:len(wind_spd)]
  wind_spd=list(map(lambda k: k+'KT', wind_spd))
  return(wind_spd)
 
-def full_wind(self,string):
+def full_wind_fuction(self,string):
+"""
+Extracts Wind Direction from the GFS LAMP MOS data 
+
+Returns: Full Wind DIRXXGXXKT
+""" 
  wind=[''.join(map(str, i)) for i in zip(wind_dir, wind_spd)]
  full_wind=['/'.join(map(str, i)) for i in zip(wind_dir, wind_spd)]
  return(full_wind)
