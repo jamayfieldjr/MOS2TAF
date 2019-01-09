@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import datetime
 import re 
 
-station_id = "KGEG" 
+station_id = "KPDX" 
 short_station_id = station_id[1:4]
 
 quote_page = "http://www.nws.noaa.gov/cgi-bin/lamp/getlav.pl?sta="+station_id
@@ -132,30 +132,28 @@ def split(s, n):
         return [s[:n]] + split(s[n:], n) 
 
 precip_prob  =  split(precip_prob ,3)
-pcp = ['PRECIP:']*len(precip_prob)
-precentage = ['% ']*len(precip_prob)
-zipped_precip_prob =[''.join(map(str, i)) for i in zip(pcp, precip_prob, precentage)]
+
+pcp = ['P']*len(precip_prob)
+zipped_precip_prob =[''.join(map(str, i)) for i in zip(pcp, precip_prob)]
 #===================================================================================
 #===================================================================================
 #Conditional Probability of snow occurring at the hour.
 lol = lines[16]
 lol = lol[5:len(lol)]
 snow_prob  =  split(lol, 3)
-pcp = ['SN: ']*len(snow_prob)
-precentage = ['% ']*len(snow_prob)
-zipped_snow_prob =[''.join(map(str, i)) for i in zip(pcp, snow_prob, precentage)]
+pcp = ['SN']*len(snow_prob)
+zipped_snow_prob =[''.join(map(str, i)) for i in zip(pcp, snow_prob)]
 #===================================================================================
 #===================================================================================
 #Conditional Probability of ice occurring at the hour.
 lol= lines[15]
 lol = lol[5:len(lol)]
 ice_prob  =  split(lol, 3)
-pcp = ['IC: ']*len(ice_prob)
-precentage = ['% ']*len(ice_prob)
-zipped_ice_prob =[''.join(map(str, i)) for i in zip(pcp, ice_prob, precentage)]
+pcp = ['IC']*len(ice_prob)
+zipped_ice_prob =[''.join(map(str, i)) for i in zip(pcp, ice_prob)]
 #===================================================================================
 #===================================================================================
-
+zippy_precip_prob = [''.join(map(str, i)) for i in zip(zipped_precip_prob, zipped_snow_prob, zipped_ice_prob)]
 #lgt_yn = lines[12]
 
 #lgt_yn = temp[1:len(temp)]
