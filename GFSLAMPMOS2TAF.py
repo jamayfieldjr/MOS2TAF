@@ -7,7 +7,6 @@ import re
 
 station_id = "KDFW" 
 short_station_id = station_id[1:4]
-short_station_id = station_id[1:4]
       
 def metartext_function(): 
     """
