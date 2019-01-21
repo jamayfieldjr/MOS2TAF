@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import datetime
 import re 
 
-class TAF(object):
+class MOS2TAF(object):
     station_id = "KDFW" 
     short_station_id = station_id[1:4]
       
